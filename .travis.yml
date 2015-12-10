@@ -1,0 +1,14 @@
+sudo: required
+
+services:
+  - docker
+
+branches:
+  only:
+    - master
+
+install:
+  - docker build -t hnakamur/varnishheadrpm .
+
+script:
+  - docker run hnakamur/varnishheadrpm "$COPR_LOGIN" "$COPR_USERNAME" "$COPR_TOKEN"
