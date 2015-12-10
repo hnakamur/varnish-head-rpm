@@ -3,17 +3,21 @@
 %define    _use_internal_dependency_generator 0
 %define __find_provides %{_builddir}/../SOURCES/find-provides
 
+%define varnish_git_commit faae8c1da7c355956126b7485dc677e8891ff4cb
+%define varnish_git_short_commit %(varnish_git_commit=%{varnish_git_commit} && echo ${varnish_git_commit:0:7})
+
 Summary: High-performance HTTP accelerator
 Name: varnish
-Version: 4.1.0
+Version: 4.1.0.1.%{varnish_git_short_commit}
 #Release: 0.20140328%{?v_rc}%{?dist}
 Release: 1%{?v_rc}%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: https://www.varnish-cache.org/
 #Source0: http://repo.varnish-cache.org/source/%{name}-%{version}.tar.gz
-Source0: %{name}-%{version}%{?vd_rc}.tar.gz
+#Source0: %{name}-%{version}%{?vd_rc}.tar.gz
 #Source0: %{name}-trunk.tar.gz
+Source0: https://github.com/varnish/Varnish-Cache/archive/%{varnish_git_commit}.tar.gz#/Varnish-Cache-%{varnish_git_commit}.tar.gz
 Source1: varnish.initrc
 Source2: varnish.sysconfig
 Source3: varnish.logrotate
@@ -99,7 +103,8 @@ Documentation files for %name
 
 
 %prep
-%setup -n varnish-%{version}%{?vd_rc}
+%setup -n Varnish-Cache-%{varnish_git_commit}
+#%setup -n varnish-%{version}%{?vd_rc}
 #%setup -q -n varnish-trunk
 cp %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} .
 cp %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
@@ -114,6 +119,8 @@ cp %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} .
 %if 0%{?rhel} == 6
 export CFLAGS="$CFLAGS -O2 -g -Wp,-D_FORTIFY_SOURCE=0"
 %endif
+
+./autogen.sh
 
 # Remove "--disable static" if you want to build static libraries
 # jemalloc is not compatible with Red Hat's ppc64 RHEL kernel :-(
@@ -252,8 +259,8 @@ rm -rf %{buildroot}
 %files docs
 %defattr(-,root,root,-)
 %doc LICENSE
-%doc doc/html
-%doc doc/changes*.html
+#%doc doc/html
+#%doc doc/changes*.html
 
 %pre
 getent group varnish >/dev/null || groupadd -r varnish
@@ -305,5 +312,7 @@ fi
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Fri Dec 11 2015 Hiroaki Nakamura <hnakamur@gmail.com> - 4.1.0.1.faae8c1
+- Build using the current head commit (faae8c1).
 * Fri Sep 22 2006 Ingvar Hagelund <ingvar@linpro.no> - 1.0.1-1
 - Initial build.

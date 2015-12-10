@@ -10,8 +10,8 @@ elif [ -x /usr/lib/rpm/find-provides ]; then
 fi
 
 # We don't install vcs_version.h, so we can't use RPM_BUILD_ROOT directly.
-cd /builddir/build/BUILD/varnish* || true
-cd ${RPM_BUILD_ROOT}/../../BUILD/varnish* || true
+cd /builddir/build/BUILD/Varnish-Cache-* || true
+cd ${RPM_BUILD_ROOT}/../../BUILD/Varnish-Cache-* || true
 
 printf '#include "vcs_version.h"\nVCS_Version\n' \
         | cpp - -Iinclude | sed -e '/^"/!d' -e 's/\"//g' -e 's/^/varnishabi-strict-/'
