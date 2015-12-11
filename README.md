@@ -51,6 +51,11 @@ source .envrc
 ./docker_wrapper.sh run
 ```
 
+## NOTE: Using direnv
+
+I recommend you to use [direnv/direnv](https://github.com/direnv/direnv)
+instead of running `source .envrc` yourself.
+
 ## Modify this scripts to build other rpms
 
 1. Edit `imagename` in `docker_wrapper.sh`
