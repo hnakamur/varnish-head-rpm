@@ -1,22 +1,22 @@
-FROM centos:7
+FROM fedora:23
+# NOTE: We use fedora:23 or later since I'd like to use the feature of
+# uploading a SRPM file to copr introduced in python-copr-1.58.1.
+# See https://bugzilla.redhat.com/show_bug.cgi?id=1045744
+
 MAINTAINER Hiroaki Nakamura <hnakamur@gmail.com>
 
-RUN yum -y install epel-release \
- && yum -y install rpmdevtools rpm-build patch python-pip \
- && pip install copr-cli \
- && rpmdev-setuptree
+RUN dnf -y install python copr-cli mock rpm-build rpmdevtools patch sudo curl less scl-utils scl-utils-build \
+ && useradd -G mock builder \
+ && echo 'builder ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/builder
 
-ADD SPECS/ /root/rpmbuild/SPECS/
-ADD SOURCES/ /root/rpmbuild/SOURCES/
+USER builder
+RUN rpmdev-setuptree
+WORKDIR /home/builder/rpmbuild
 
-ADD build-varnish-head-srpm.sh /root/rpmbuild/
-RUN chmod +x /root/rpmbuild/build-varnish-head-srpm.sh
-# NOTE: I had to separate commands in two RUN's here.
-# RUN chmod +x /root/rpmbuild/build-varnish-head-srpm.sh  && /root/rpmbuild/build-varnish-head-srpm.sh
-# causes the following error:
-#   /bin/sh: /root/rpmbuild/build-varnish-head-srpm.sh: /bin/bash: bad interpreter: Text file busy
-RUN /root/rpmbuild/build-varnish-head-srpm.sh
+ADD SPECS/ ./SPECS/
+ADD SOURCES/ ./SOURCES/
+ADD scripts/ ./
+RUN sudo chown -R builder:builder . \
+ && chmod +x ./*.sh
 
-ADD copr-build.sh /root/rpmbuild/
-RUN chmod +x /root/rpmbuild/copr-build.sh
-CMD ["/root/rpmbuild/copr-build.sh"]
+CMD ["./build.sh", "copr"]
