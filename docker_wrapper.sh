@@ -1,6 +1,6 @@
 #!/bin/sh
 set -eu
-imagename=varnishhead
+imagename=varnishheadrpm
 
 usage() {
   cat <<'EOF' 1>&2
