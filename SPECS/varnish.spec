@@ -3,12 +3,12 @@
 %define    _use_internal_dependency_generator 0
 %define __find_provides %{_builddir}/../SOURCES/find-provides
 
-%define varnish_git_commit 7bb758fd81265d912c28048d7a41c4316a8d8686
+%define varnish_git_commit 390c19ebde531ff3a890d0e5ea6ae117177999a1
 %define varnish_git_short_commit %(varnish_git_commit=%{varnish_git_commit} && echo ${varnish_git_commit:0:7})
 
 Summary: High-performance HTTP accelerator
 Name: varnish
-Version: 4.1.0.2.%{varnish_git_short_commit}
+Version: 4.1.0.3.%{varnish_git_short_commit}
 #Release: 0.20140328%{?v_rc}%{?dist}
 Release: 1%{?v_rc}%{?dist}
 License: BSD
@@ -312,6 +312,8 @@ fi
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Mon Dec 21 2015 Hiroaki Nakamura <hnakamur@gmail.com> - 4.1.0.3.390c19e
+- Build using the current head commit (390c19e).
 * Mon Dec 14 2015 Hiroaki Nakamura <hnakamur@gmail.com> - 4.1.0.2.7bb758f
 - Build using the current head commit (7bb758f).
 * Fri Dec 11 2015 Hiroaki Nakamura <hnakamur@gmail.com> - 4.1.0.1.faae8c1
