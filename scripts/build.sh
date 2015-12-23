@@ -9,11 +9,16 @@ arch=x86_64
 copr_project_description="HEAD version of Varnish High-performance HTTP accelerator"
 
 copr_project_instructions="\`\`\`
+sudo yum -y install epel-release
+\`\`\`
+
+\`\`\`
+
 sudo curl -sL -o /etc/yum.repos.d/${COPR_USERNAME}-${copr_project_name}.repo https://copr.fedoraproject.org/coprs/${COPR_USERNAME}/${copr_project_name}/repo/epel-7/${COPR_USERNAME}-${copr_project_name}-epel-7.repo
 \`\`\`
 
 \`\`\`
-sudo yum install ${rpm_name}
+sudo yum -y install ${rpm_name}
 \`\`\`"
 
 spec_file=${rpm_name}.spec
