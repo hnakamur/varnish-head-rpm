@@ -2,7 +2,7 @@
 set -eu
 
 # NOTE: Edit project_name and rpm_name.
-project_name=varnish-head
+copr_project_name=varnish-head
 rpm_name=varnish
 arch=x86_64
 
