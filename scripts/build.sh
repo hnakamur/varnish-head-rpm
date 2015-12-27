@@ -74,7 +74,7 @@ build_rpm_on_copr() {
   build_srpm
 
   # Check the project is already created on copr.
-  status=`curl -s -o /dev/null -w "%{http_code}" https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/${project_name}/detail/`
+  status=`curl -s -o /dev/null -w "%{http_code}" https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/${copr_project_name}/detail/`
   if [ $status = "404" ]; then
     # Create the project on copr.
     # We call copr APIs with curl to work around the InsecurePlatformWarning problem
@@ -84,7 +84,7 @@ build_rpm_on_copr() {
     #
     # NOTE: Edit description here. You may or may not need to edit instructions.
     curl -s -X POST -u "${COPR_LOGIN}:${COPR_TOKEN}" \
-      --data-urlencode "name=${project_name}" --data-urlencode "${mock_chroot}=y" \
+      --data-urlencode "name=${copr_project_name}" --data-urlencode "${mock_chroot}=y" \
       --data-urlencode "description=${copr_project_description}" \
       --data-urlencode "instructions=${copr_project_instructions}" \
       https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/new/
@@ -93,7 +93,7 @@ build_rpm_on_copr() {
   curl -s -X POST -u "${COPR_LOGIN}:${COPR_TOKEN}" \
     -F "${mock_chroot}=y" \
     -F "pkgs=@${topdir}/SRPMS/${srpm_file};type=application/x-rpm" \
-    https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/${project_name}/new_build_upload/
+    https://copr.fedoraproject.org/api/coprs/${COPR_USERNAME}/${copr_project_name}/new_build_upload/
 }
 
 case "${1:-}" in
